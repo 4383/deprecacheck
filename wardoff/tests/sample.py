@@ -7,6 +7,11 @@ def baz():
     print("baz")
 
 
+def raiseValueError():
+    print("raise")
+    raise ValueError("boom")
+
+
 def fiz():
     print("fiz")
     print("fiz")

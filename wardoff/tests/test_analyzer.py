@@ -22,6 +22,9 @@ class TestModuleAnalyzer(unittest.TestCase):
         results = self.module_analyzer.runast()
         self.assertTrue((results is not None))
         self.assertEqual(4, len(results))
+        # test each function detected as deprecated
+        # key = function definintion line number
+        # value = detected raise line number
         self.assertEqual(results[0], {10: 15})
         self.assertEqual(results[1], {18: 19})
         self.assertEqual(results[2], {23: 24})
