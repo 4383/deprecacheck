@@ -6,22 +6,35 @@ from wardoff import venv
 
 
 class TestVenv(unittest.TestCase):
-    def test_create(self):
+    def setUp(self):
         venv.create()
+
+    def test_site_packages(self):
+        self.assertTrue(venv.site_packages().is_dir())
+
+    def test_create(self):
         self.assertTrue(venv.VENVDIR.is_dir())
 
+    def test_pip_install(self):
+        output = venv.pip_install('niet')
+        lines = []
+        for line in output.split("\n"):
+            if line:
+                lines.append(line)
+        self.assertTrue(
+            lines[-1].startswith("Successfully installed"))
+
     def test_pip_show(self):
-        venv.create()
+        venv.pip_install('niet')
         info = venv.pip_show('niet')
         home_page = None
         for el in info:
-            if not el.startswith("Home-page:"):
+            if not el.startswith("Location:"):
                 continue
-            home_page = el.replace("Home-page: ", "")
-        self.assertEqual(home_page, "https://github.com/openuado/niet/")
+            location = el.replace("Location: ", "")
+        self.assertTrue(Path(location).is_dir())
 
     def test_destroy(self):
-        venv.create()
         self.assertTrue(venv.VENVDIR.is_dir())
         venv.destroy()
         self.assertFalse(venv.VENVDIR.is_dir())
