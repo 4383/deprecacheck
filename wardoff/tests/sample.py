@@ -40,8 +40,16 @@ class Bar:
 
     def bar(self):
         print("bar")
-        raise DeprecationWarning("boom")
+        raise PendingDeprecationWarning("boom")
 
+
+class Bob:
+    def run(self):
+        print("run")
+
+    def yop(self):
+        print("bar")
+        raise FutureWarning("boom")
 
 class Foo:
     pass

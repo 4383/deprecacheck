@@ -14,18 +14,30 @@ class TestModuleAnalyzer(unittest.TestCase):
     def test_init(self):
         self.assertTrue((self.module_analyzer.tokens is not None))
 
-    #def test_run(self):
-    #    self.module_analyzer.tokenizer()
-    #    self.assertTrue(False)
-
     def test_runast(self):
         results = self.module_analyzer.runast()
         self.assertTrue((results is not None))
-        self.assertEqual(4, len(results))
-        # test each function detected as deprecated
-        # key = function definintion line number
-        # value = detected raise line number
-        self.assertEqual(results[0], {10: 15})
-        self.assertEqual(results[1], {18: 19})
-        self.assertEqual(results[2], {23: 24})
-        self.assertEqual(results[3], {36: 38})
+        self.assertEqual(len(results), 6)
+
+    def test_retrieve_code(self):
+        self.module_analyzer.runast()
+        results = self.module_analyzer.retrieve_code()
+        self.assertEqual(len(results), 5)
+        self.assertEqual(results[0]['def'].split("\n")[0], 'def fiz():')
+
+    def test_tokenizer(self):
+        self.module_analyzer.runast()
+        results = self.module_analyzer.retrieve_code()
+        tokens = self.module_analyzer.tokenizer(results[0]['def'])
+        self.assertTrue((tokens is not None))
+        self.assertEqual(tokens[2].string, "fiz")
+        tokens = self.module_analyzer.tokenizer(results[0]['raise'])
+        self.assertTrue((tokens is not None))
+        self.assertEqual(tokens[2].string, "DeprecationWarning")
+
+    def test_extract_function_name(self):
+        self.module_analyzer.runast()
+        results = self.module_analyzer.retrieve_code()
+        tokens = self.module_analyzer.tokenizer(results[0]['def'])
+        name = self.module_analyzer.extract_function_name(tokens)
+        self.assertEqual(name, 'fiz')
