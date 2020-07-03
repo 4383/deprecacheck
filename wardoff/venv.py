@@ -62,8 +62,6 @@ def pip_install(*package):
     cmd_params = list(package)
     cmd_params.insert(0, "install")
     cmd_params.insert(1, "-I")
-    cmd_params.insert(2, "--root")
-    cmd_params.insert(3, str(VENVDIR))
     return pip(cmd_params)
 
 
