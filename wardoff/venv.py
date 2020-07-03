@@ -1,3 +1,4 @@
+import os
 import shutil
 import subprocess
 import tempfile
@@ -33,14 +34,18 @@ def destroy():
 
 def create():
     destroy()
+    cwd = os.getcwd()
+    os.mkdir(str(VENVDIR))
+    os.chdir(str(VENVDIR))
     virtualenv.create(
-        str(VENVDIR),
+        ".",
         clear=False,
         symlinks=True,
         system_site_packages=False,
         prompt=None,
         with_pip=True,
     )
+    os.chdir(cwd)
 
 
 def pip(cmd_params):
