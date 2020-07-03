@@ -1,16 +1,24 @@
 # Wardoff
 
+[![Build Status](https://travis-ci.org/4383/wardoff.svg?branch=master)](https://travis-ci.org/4383/wardoff)
+![PyPI](https://img.shields.io/pypi/v/wardoff.svg)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/wardoff.svg)
+![PyPI - Status](https://img.shields.io/pypi/status/wardoff.svg)
+[![Downloads](https://img.shields.io/pypi/dm/wardoff.svg)](https://pypi.python.org/pypi/wardoff/)
+
 Looking for deprecated stuffs in project requirements and underlying libraries
 
 Pronounced `ward off`
 
 ## Install
 
-Still in development will be released on pypi soon.
+```shell
+$ python3 -m pip install --user wardoff
+```
 
 ## Requirements
 
-- python
+- python3.8+
 - git
 
 ## Usages
