@@ -34,6 +34,9 @@ def destroy():
 
 def create():
     destroy()
+    # Normally we don't need to do this as create accept a path
+    # but on travis created virtualenv is weird so we prefer to
+    # create the path manually on then move in to create the venv.
     cwd = os.getcwd()
     os.mkdir(str(VENVDIR))
     os.chdir(str(VENVDIR))
