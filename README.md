@@ -12,6 +12,9 @@ Pronounced `ward off`
 
 ## Install
 
+Still in development and really unstable, however you can install unstable
+development versions by using:
+
 ```shell
 $ python3 -m pip install --user wardoff
 ```
