@@ -2,7 +2,6 @@ import ast
 import io
 import tokenize
 
-
 # order is important because we will retrieve by
 # trying to find by name in substring and so PendingDeprecationWarning
 # and DeprecationWarning could collid
@@ -36,7 +35,9 @@ def get_node_source(source, node):
     return ast.get_source_segment(source, node)
 
 
-TOKENS_TYPES = {
+# We don't need to list all tokens types only few of them
+# are useful here
+NEEDED_TOKENS_TYPES = {
     "ENCODING": 62,
     "NAME": 1,
     "OP": 54,
@@ -68,16 +69,25 @@ class ModuleAnalyzer:
         name = None
         ignored = ['def']
         for token in tokens:
-            if int(token.type) == TOKENS_TYPES['OP']:
+            if int(token.type) == NEEDED_TOKENS_TYPES['OP']:
                 return name
-            if int(token.type) == TOKENS_TYPES['ENCODING']:
+            if int(token.type) == NEEDED_TOKENS_TYPES['ENCODING']:
                 continue
             if token.string in ignored:
                 continue
             name = token.string
 
-    def extract_exception_message(self, tokens):
-        pass
+    def extract_exception_type_and_message(self, tokens):
+        name = None
+        ignored = ['def']
+        for token in tokens:
+            if int(token.type) == NEEDED_TOKENS_TYPES['OP']:
+                return name
+            if int(token.type) == NEEDED_TOKENS_TYPES['ENCODING']:
+                continue
+            if token.string in ignored:
+                continue
+            name = token.string
 
     def runast(self):
         self.results = walk(self.ast, results=[])
