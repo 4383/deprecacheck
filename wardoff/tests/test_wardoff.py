@@ -10,8 +10,9 @@ from wardoff import (
 )
 
 BASE_PATH = Path(__file__).parent
-REQUIREMENT_SAMPLE = BASE_PATH.joinpath(BASE_PATH,
-    "..", "..", "test-requirements.txt")
+REQUIREMENT_SAMPLE = BASE_PATH.joinpath(
+    BASE_PATH, "..", "..", "test-requirements.txt"
+)
 
 
 class TestArguments(unittest.TestCase):

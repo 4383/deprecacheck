@@ -4,7 +4,7 @@ from wardoff import argparser
 def main():
     args = argparser().parse_args()
     analyzer = args.project
-    out_file = args.output
+    _ = args.output
     analyzer.analyze()
 
 

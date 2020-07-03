@@ -1,10 +1,3 @@
-import abc
-
-import requests
-
-from foo import bar
-
-
 def baz():
     print("baz")
 
@@ -29,9 +22,7 @@ def foz():
 
 def fuzz():
     raise DeprecationWarning(
-        "foz is deprecated please stop to use it"
-        "blablabla"
-        "blablafuzz"
+        "foz is deprecated please stop to use it" "blablabla" "blablafuzz"
     )
     print("foz")
 
@@ -52,6 +43,7 @@ class Bob:
     def yop(self):
         print("bar")
         raise FutureWarning("boom")
+
 
 class Foo:
     pass
