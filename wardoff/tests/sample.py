@@ -1,5 +1,7 @@
-import requests
 import abc
+
+import requests
+
 from foo import bar
 
 

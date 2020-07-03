@@ -1,12 +1,13 @@
-from pathlib import Path
 import unittest
+from pathlib import Path
 
-from wardoff import argparser
-from wardoff import PathAnalyzer
-from wardoff import FileAnalyzer
-from wardoff import RepoAnalyzer
-from wardoff import PackageAnalyzer
-
+from wardoff import (
+    FileAnalyzer,
+    PackageAnalyzer,
+    PathAnalyzer,
+    RepoAnalyzer,
+    argparser,
+)
 
 BASE_PATH = Path(__file__).parent
 REQUIREMENT_SAMPLE = BASE_PATH.joinpath(BASE_PATH,

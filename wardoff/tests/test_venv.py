@@ -1,8 +1,7 @@
-from pathlib import Path
 import unittest
+from pathlib import Path
 
-from wardoff import utils
-from wardoff import venv
+from wardoff import utils, venv
 
 
 class TestVenv(unittest.TestCase):

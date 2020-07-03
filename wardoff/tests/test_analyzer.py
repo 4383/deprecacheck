@@ -1,8 +1,7 @@
-from pathlib import Path
 import unittest
+from pathlib import Path
 
-from wardoff import utils
-from wardoff import analyzer
+from wardoff import analyzer, utils
 from wardoff.tests import utils as tutils
 
 

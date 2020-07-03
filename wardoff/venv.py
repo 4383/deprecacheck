@@ -1,15 +1,13 @@
-from pathlib import Path
 import os
 import shutil
-import sys
 import subprocess
+import sys
 import tempfile
 import uuid
 import venv as virtualenv
-
+from pathlib import Path
 
 from wardoff import utils
-
 
 TMPDIR = Path(tempfile.gettempdir())
 VENVDIR = TMPDIR.joinpath(utils.identifier())
