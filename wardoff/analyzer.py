@@ -1,8 +1,9 @@
 import ast
 import io
 import tokenize
+from pathlib import Path
 
-# order is important because we will retrieve by
+# Order is important because we will retrieve by
 # trying to find by name in substring and so PendingDeprecationWarning
 # and DeprecationWarning could collid
 BASE_DEPRECATIONS = [
@@ -13,10 +14,12 @@ BASE_DEPRECATIONS = [
 
 
 class AnalyzerException(Exception):
+    """Exceptions related to the module analyzer."""
+
     pass
 
 
-def walk(root, results=[], previous=None):
+def find_exceptions_recursively(root, results=None, previous=None):
     """Recursively walk through an AST tree to looking for all exceptions.
 
     Here we don't care about the type of the raised exception, we just
@@ -30,6 +33,8 @@ def walk(root, results=[], previous=None):
     :param ast previous: AST node previously analyzed.
     :return: List of results founds
     """
+    if not results:
+        results = []
     previous = root
     for node in ast.iter_child_nodes(root):
         # an Exception is raised? If yes then we add her to results.
@@ -43,9 +48,10 @@ def walk(root, results=[], previous=None):
                     "raise": node,
                 }
             )
-        # We just care about the exceptions raised in class or function.
+        # We just care about the exceptions raised in module, classes
+        # or functions. In other words ignore other kinds of nodes.
         if isinstance(node, ast.FunctionDef) or isinstance(node, ast.ClassDef):
-            results = walk(node, results)
+            results = find_exceptions_recursively(node, results)
     return results
 
 
@@ -56,6 +62,85 @@ def get_node_source(source, node):
     :param ast node: AST node to retrieve in source code list.
     """
     return ast.get_source_segment(source, node)
+
+
+def retrieve_code(results, content):
+    """Retrieve original code of the AST detected as raising exception.
+
+    When raised exceptions are detected in the AST then we put the
+    corresponding line number in results and this function aim to retrieve
+    the original code of the parsed AST to tokenize to extract needed
+    infos.
+
+    :return: lines of source code that corresponding to the AST tree.
+    """
+    source_lines = []
+    for el in results:
+        raise_line = get_node_source(content, el["raise"])
+        for depr in BASE_DEPRECATIONS:
+            if depr.__name__ not in raise_line:
+                continue
+            def_line = get_node_source(content, el["def"])
+            source_lines.append({"def": def_line, "raise": raise_line})
+            break
+    return source_lines
+
+
+def tokenizer(snippet):
+    """Tokenize the given snippet of source code.
+
+    :param string snippet: Source code to tokenize.
+
+    :return: list of tokens
+    """
+    if not isinstance(snippet, io.BytesIO):
+        snippet = io.BytesIO(snippet.encode("utf-8"))
+    return [el for el in tokenize.tokenize(snippet.readline)]
+
+
+def extract_function_name(tokens):
+    """Retrieve function name from the given token list.
+
+    Given tokens should correspond to the isolated source code of
+    the catched function.
+
+    :param string tokens: tokens to parse.
+
+    :return: the function name at string format.
+    """
+    name = None
+    ignored = ["def"]
+    for token in tokens:
+        if int(token.type) == NEEDED_TOKENS_TYPES["OP"]:
+            break
+        if int(token.type) == NEEDED_TOKENS_TYPES["ENCODING"]:
+            continue
+        if token.string in ignored:
+            continue
+        name = token.string
+    return name
+
+
+def extract_exception_type(tokens):
+    """Retrieve the exception type from the given token list.
+
+    Given tokens should correspond to the isolated source code of
+    the catched exception.
+
+    :param string tokens: tokens to parse.
+
+    :return: the function name at string format.
+    """
+    name = None
+    ignored = ["def"]
+    for token in tokens:
+        if int(token.type) == NEEDED_TOKENS_TYPES["OP"]:
+            return name
+        if int(token.type) == NEEDED_TOKENS_TYPES["ENCODING"]:
+            continue
+        if token.string in ignored:
+            continue
+        name = token.string
 
 
 # We don't need to list all tokens types only few of them
@@ -101,6 +186,11 @@ class ModuleAnalyzer:
                                           to looking for.
         :return: Return a list of results (function name, exceptions type).
         """
+        # Allow to pass Path and string as module_path
+        if isinstance(module_path, Path):
+            self.module_path = str(module_path)
+        else:
+            self.module_path = module_path
         self.ast = None
         self.code = None
         self.tokens = None
@@ -109,57 +199,15 @@ class ModuleAnalyzer:
         if custome_deprecations and isinstance(custome_deprecations, list):
             global BASE_DEPRECATIONS
             BASE_DEPRECATIONS.extends(custome_deprecations)
-        with open(module_path, "r") as fp:
-            self.content = fp.read()
-            self.code = io.BytesIO(self.content.encode("utf-8"))
-            self.ast = ast.parse(self.content)
-        self.tokens = [el for el in tokenize.tokenize(self.code.readline)]
-
-    def tokenizer(self, snippet):
-        if not isinstance(snippet, io.BytesIO):
-            snippet = io.BytesIO(snippet.encode("utf-8"))
-        return [el for el in tokenize.tokenize(snippet.readline)]
-
-    def extract_function_name(self, tokens):
-        name = None
-        ignored = ["def"]
-        for token in tokens:
-            if int(token.type) == NEEDED_TOKENS_TYPES["OP"]:
-                return name
-            if int(token.type) == NEEDED_TOKENS_TYPES["ENCODING"]:
-                continue
-            if token.string in ignored:
-                continue
-            name = token.string
-
-    def extract_exception_type_and_message(self, tokens):
-        name = None
-        ignored = ["def"]
-        for token in tokens:
-            if int(token.type) == NEEDED_TOKENS_TYPES["OP"]:
-                return name
-            if int(token.type) == NEEDED_TOKENS_TYPES["ENCODING"]:
-                continue
-            if token.string in ignored:
-                continue
-            name = token.string
-
-    def runast(self):
-        self.results = walk(self.ast, results=[])
-        return self.results
-
-    def retrieve_code(self):
-        if not self.results:
+        try:
+            with open(module_path, "r") as fp:
+                self.content = fp.read()
+        # Handle file handling errors (rights, unexisting files, etc...)
+        except (OSError, IOError) as err:
             raise AnalyzerException(
-                "No results available, please call runast first"
+                "Error detected during module opening ({})".format(str(err))
             )
-        source_lines = []
-        for el in self.results:
-            raise_line = get_node_source(self.content, el["raise"])
-            for depr in BASE_DEPRECATIONS:
-                if depr.__name__ not in raise_line:
-                    continue
-                def_line = get_node_source(self.content, el["def"])
-                source_lines.append({"def": def_line, "raise": raise_line})
-                break
-        return source_lines
+        self.code = io.BytesIO(self.content.encode("utf-8"))
+        self.ast = ast.parse(self.content)
+        self.tokens = [el for el in tokenize.tokenize(self.code.readline)]
+        self.exceptions_found = find_exceptions_recursively(self.ast)
