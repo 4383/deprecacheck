@@ -16,6 +16,7 @@ script:
 - tox
 - python setup.py install
 - wardoff -h
+
 deploy:
   matrix:
   - provider: pypi
