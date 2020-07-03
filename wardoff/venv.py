@@ -1,4 +1,3 @@
-import os
 import shutil
 import subprocess
 import tempfile
@@ -47,7 +46,8 @@ def create():
 def pip(cmd_params):
     if not isinstance(cmd_params, list):
         raise ValueError("list is excepted")
-    base = [os.path.join(VENVDIR, "bin", "python"), "-m", "pip"]
+    binary = VENVDIR.joinpath("bin", "python")
+    base = [str(binary), "-m", "pip"]
     argv = base + cmd_params
     print(" ".join(argv))
     return subprocess.check_output(argv).decode("utf8")
