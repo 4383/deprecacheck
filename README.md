@@ -6,7 +6,34 @@
 ![PyPI - Status](https://img.shields.io/pypi/status/wardoff.svg)
 [![Downloads](https://img.shields.io/pypi/dm/wardoff.svg)](https://pypi.python.org/pypi/wardoff/)
 
-Looking for deprecated stuffs in project requirements and underlying libraries
+Wardoff aim to help you to maintain your code base clean and up-to-date by
+reducing the pain of collect informations about all your underlaying libraries
+in your stack in a proactively.
+
+Wardoff looking for deprecated stuffs in project requirements and underlying
+libraries to help you to keep your code up-to-date.
+
+The main goal of wardoff is to analyze all requirements of a given project
+to extract deprecated things from their codes.
+
+For each analyze a dedicated python virtual environment is built and project's
+requirements are installed within. Then installed source code files of
+project's requirement are analyzed one by one.
+
+Code analyze of the requirements is based on
+[AST](https://docs.python.org/3/library/ast.html) and
+[python tokens](https://docs.python.org/3/library/tokenize.html). Each
+source code file of each underlaying library is analyzed in this way.
+
+You can pass a list of constraints to apply to your analyze to be sure
+to match the right versions of your underlaying libraries.
+
+Traditionally projects maintainers are informed that functions will become
+deprecated or removed by reading documentation or by
+observing deprecation warning at the runtime in logs. When your stack
+grow and the number of requirements in your stack increase it could be
+painful to stay up-to-date, wardoff aim to collect for you all these infos
+by only using 1 command without needing any runtime environment setup.
 
 Pronounced `ward off`
 
@@ -70,3 +97,8 @@ Example:
 ```sh
 $ wardoff ~/dev/nova # from a local clone of openstack/nova
 ```
+
+## The future of wardoff
+
+We plan to introduce more features like issues and pull requests or
+patches harvesting.
