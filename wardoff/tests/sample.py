@@ -47,3 +47,7 @@ class Bob:
 
 class Foo:
     pass
+
+
+def boom(name="yo", age=1):
+    pass

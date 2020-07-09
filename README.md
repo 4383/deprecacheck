@@ -98,6 +98,43 @@ Example:
 $ wardoff ~/dev/nova # from a local clone of openstack/nova
 ```
 
+## Side features
+
+Wardoff provide a CLI tokenizer which can be used against code passed through
+the CLI or by passing a file path and a specific line to read.
+
+Example with raw code passed through the CLI:
+
+```sh
+$ wardoff-tokenizer "def person(name, age):"
+TokenInfo(type=62 (ENCODING), string='utf-8', start=(0, 0), end=(0, 0), line='')
+TokenInfo(type=1 (NAME), string='def', start=(1, 0), end=(1, 3), line='def person(name, age):')
+TokenInfo(type=1 (NAME), string='person', start=(1, 4), end=(1, 10), line='def person(name, age):')
+TokenInfo(type=54 (OP), string='(', start=(1, 10), end=(1, 11), line='def person(name, age):')
+TokenInfo(type=1 (NAME), string='name', start=(1, 11), end=(1, 15), line='def person(name, age):')
+TokenInfo(type=54 (OP), string=',', start=(1, 15), end=(1, 16), line='def person(name, age):')
+TokenInfo(type=1 (NAME), string='age', start=(1, 17), end=(1, 20), line='def person(name, age):')
+TokenInfo(type=54 (OP), string=')', start=(1, 20), end=(1, 21), line='def person(name, age):')
+TokenInfo(type=54 (OP), string=':', start=(1, 21), end=(1, 22), line='def person(name, age):')
+TokenInfo(type=4 (NEWLINE), string='', start=(1, 22), end=(1, 23), line='')
+TokenInfo(type=0 (ENDMARKER), string='', start=(2, 0), end=(2, 0), line='')
+```
+
+Another example by passing a file line to tokenize:
+
+```sh
+wardoff-tokenizer ~/dev/wardoff/wardoff/tokenizer.py+12
+```
+
+It will tokenize the line number 12 of the file
+`~/dev/wardoff/wardoff/tokenizer.py`
+
+For further options with this command:
+
+```sh
+$ wardoff-tokenizer -h
+```
+
 ## The future of wardoff
 
 We plan to introduce more features like issues and pull requests or

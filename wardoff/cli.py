@@ -1,4 +1,5 @@
 import argparse
+import textwrap
 from pathlib import Path
 
 from wardoff.analyzers import module as module_analyzer
@@ -21,7 +22,6 @@ class ProjectType:
             print(err)
 
 
-# arguments parsing
 def main():
     parser = argparse.ArgumentParser(
         description="Find deprecations in your requirements and "
@@ -42,5 +42,37 @@ def main():
         "--output",
         type=argparse.FileType("w"),
         help="Print output in a file instead of stdout",
+    )
+    return parser
+
+
+def tokenizer():
+    epilog = textwrap.dedent(
+        """\
+        This command can be used to transform raw code in python
+        tokens. It could be useful for debuging or testing purpose.
+        It is a bit similar to the stdlib tokenzier module [1]
+        but here you can tokenize code from the stdin and not only
+        from a file.
+        [1] https://docs.python.org/3/library/tokenize.html#command-line-usage
+    """
+    )
+    parser = argparse.ArgumentParser(
+        description="Tokenize code python code",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=epilog,
+    )
+    parser.add_argument(
+        "-t",
+        "--trim",
+        action="store_true",
+        default=False,
+        help="trim whitespaces if flag is given",
+    )
+    parser.add_argument(
+        "code",
+        help="Code to tokenize, could be raw code or a specific "
+        "line of file to analyze (e.g /path/to/file+12 where +12 is the "
+        "line number to tokenize)",
     )
     return parser
