@@ -170,7 +170,7 @@ class ModuleAnalyzer:
         - FutureWarning
         - PendingDeprecationWarning
 
-        To retrieve this information this class will analyze the AST syntaxe
+        To retrieve this information this class will analyze the AST syntax
         of the module to retrieve all functions/classes where the previous
         exceptions are raised.
 
