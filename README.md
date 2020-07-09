@@ -6,9 +6,9 @@
 ![PyPI - Status](https://img.shields.io/pypi/status/wardoff.svg)
 [![Downloads](https://img.shields.io/pypi/dm/wardoff.svg)](https://pypi.python.org/pypi/wardoff/)
 
-Wardoff aim to help you to maintain your code base clean and up-to-date by
-reducing the pain of collect informations about all your underlaying libraries
-in your stack in a proactively.
+Wardoff (pronounced `ward off`) aim to help you to maintain your code base
+clean and up-to-date by reducing the pain of collect informations about all
+your underlaying libraries in your stack in a proactively.
 
 Wardoff looking for deprecated stuffs in project requirements and underlying
 libraries to help you to keep your code up-to-date.
@@ -35,7 +35,7 @@ grow and the number of requirements in your stack increase it could be
 painful to stay up-to-date, wardoff aim to collect for you all these infos
 by only using 1 command without needing any runtime environment setup.
 
-Pronounced `ward off`
+
 
 ## Install
 
