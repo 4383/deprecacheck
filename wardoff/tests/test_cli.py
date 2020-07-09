@@ -2,7 +2,7 @@ import unittest
 from pathlib import Path
 
 from wardoff import cli
-from wardoff.module_analyzer import (
+from wardoff.analyzers.module import (
     FileAnalyzer,
     PackageAnalyzer,
     PathAnalyzer,

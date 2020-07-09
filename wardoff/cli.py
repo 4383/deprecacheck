@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 
-from wardoff import module_analyzer
+from wardoff.analyzers import module as module_analyzer
 
 
 class ProjectType:
