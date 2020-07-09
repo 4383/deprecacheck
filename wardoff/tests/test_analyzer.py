@@ -3,7 +3,7 @@ import io
 import tokenize
 import unittest
 
-from wardoff import analyzer
+from wardoff.analyzers import syntax as syntax_analyzer
 from wardoff.tests import utils as tutils
 
 
@@ -17,31 +17,31 @@ class TestAnalyzerIsFunctions(unittest.TestCase):
         self.tokens = [el for el in tokenize.tokenize(self.code.readline)]
 
     def test_find_exceptions_recursively(self):
-        results = analyzer.find_exceptions_recursively(self.ast)
+        results = syntax_analyzer.find_exceptions_recursively(self.ast)
         self.assertTrue((results is not None))
         self.assertEqual(len(results), 6)
 
     def test_retrieve_code(self):
-        results = analyzer.find_exceptions_recursively(self.ast)
-        results = analyzer.retrieve_code(results, self.content)
+        results = syntax_analyzer.find_exceptions_recursively(self.ast)
+        results = syntax_analyzer.retrieve_code(results, self.content)
         self.assertEqual(len(results), 5)
         self.assertEqual(results[0]["def"].split("\n")[0], "def fiz():")
 
     def test_tokenizer(self):
-        results = analyzer.find_exceptions_recursively(self.ast)
-        results = analyzer.retrieve_code(results, self.content)
-        tokens = analyzer.tokenizer(results[0]["def"])
+        results = syntax_analyzer.find_exceptions_recursively(self.ast)
+        results = syntax_analyzer.retrieve_code(results, self.content)
+        tokens = syntax_analyzer.tokenizer(results[0]["def"])
         self.assertTrue((tokens is not None))
         self.assertEqual(tokens[2].string, "fiz")
-        tokens = analyzer.tokenizer(results[0]["raise"])
+        tokens = syntax_analyzer.tokenizer(results[0]["raise"])
         self.assertTrue((tokens is not None))
         self.assertEqual(tokens[2].string, "DeprecationWarning")
 
     def test_extract_function_name(self):
-        results = analyzer.find_exceptions_recursively(self.ast)
-        results = analyzer.retrieve_code(results, self.content)
-        tokens = analyzer.tokenizer(results[0]["def"])
-        name = analyzer.extract_function_name(tokens)
+        results = syntax_analyzer.find_exceptions_recursively(self.ast)
+        results = syntax_analyzer.retrieve_code(results, self.content)
+        tokens = syntax_analyzer.tokenizer(results[0]["def"])
+        name = syntax_analyzer.extract_function_name(tokens)
         self.assertEqual(name, "fiz")
 
 
@@ -55,7 +55,7 @@ class TestModuleAnalyzer(unittest.TestCase):
         self.tokens = [el for el in tokenize.tokenize(self.code.readline)]
 
     def test_init(self):
-        self.module_analyzer = analyzer.ModuleAnalyzer(str(self.module))
+        self.module_analyzer = syntax_analyzer.ModuleAnalyzer(str(self.module))
         self.assertTrue((self.module_analyzer.tokens is not None))
         self.assertEqual(self.module_analyzer.tokens, self.tokens)
         self.assertTrue((self.module_analyzer.code is not None))
@@ -63,7 +63,7 @@ class TestModuleAnalyzer(unittest.TestCase):
         self.assertTrue((self.module_analyzer.ast is not None))
 
     def test_init_with_path(self):
-        self.module_analyzer = analyzer.ModuleAnalyzer(self.module)
+        self.module_analyzer = syntax_analyzer.ModuleAnalyzer(self.module)
         self.assertTrue((self.module_analyzer.tokens is not None))
         self.assertEqual(self.module_analyzer.tokens, self.tokens)
         self.assertTrue((self.module_analyzer.code is not None))
@@ -71,8 +71,8 @@ class TestModuleAnalyzer(unittest.TestCase):
         self.assertTrue((self.module_analyzer.ast is not None))
 
     def test_failing_init(self):
-        with self.assertRaises(analyzer.AnalyzerException) as err:
-            self.module_analyzer = analyzer.ModuleAnalyzer("/bim/boom")
+        with self.assertRaises(syntax_analyzer.AnalyzerException) as err:
+            self.module_analyzer = syntax_analyzer.ModuleAnalyzer("/bim/boom")
             self.assertEqual(
                 err,
                 "Error detected during module opening "
