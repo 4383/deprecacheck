@@ -1,0 +1,13 @@
+---
+file-contents:
+  releasenotes/notes/add-reno-0cc4d7566599aebd.yaml:
+    other:
+    - 'Add reno for managing release notes.
+
+      '
+notes:
+- files:
+  - - releasenotes/notes/add-reno-0cc4d7566599aebd.yaml
+    - !!binary |
+      NzYwYjFhMDZhMTgxYTBlZWVhMjAwN2ViNDFlZWNmYmJhODVkYmYwNQ==
+  version: 0.0.0
