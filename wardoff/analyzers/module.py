@@ -1,5 +1,9 @@
 from pathlib import Path
 
+from wardoff import utils, venv
+from wardoff.analyzers import syntax
+from wardoff.package import Package
+
 
 class ModuleAnalyzerInitializationError(Exception):
     pass
@@ -42,4 +46,32 @@ class RepoAnalyzer(BaseAnalyzer):
 
 
 class PackageAnalyzer(BaseAnalyzer):
-    pass
+    def analyze(self):
+        venv.create()
+        self.retrieve_requirements()
+        self.search_deprecated()
+
+    def retrieve_requirements(self):
+        venv.pip_install(self.project)
+        self.requirements = [
+            Package(el) for el in venv.pip_freeze([self.project])
+        ]
+
+    def search_deprecated(self):
+        for el in self.requirements:
+            print(el.name)
+            if not el.sources_path:
+                continue
+            deprecations = []
+            for pyfile in utils.get_pyfiles(el.sources_path):
+                try:
+                    mod_analyzer = syntax.ModuleAnalyzer(pyfile)
+                except syntax.AnalyzerSyntaxException:
+                    continue
+                mod_analyzer.analyze()
+                if mod_analyzer.results:
+                    deprecations.extends(mod_analyzer.results)
+            if not deprecations:
+                print("No deprecations found")
+                continue
+            print(deprecations)

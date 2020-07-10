@@ -1,9 +1,10 @@
 import os
+from pathlib import Path
 
 
 def identifier():
     return "wardoff-{pid}".format(pid=os.getpid())
 
 
-def package_sources(package_info):
-    pass
+def get_pyfiles(path):
+    return sorted(Path(path).glob("**/*.py"))

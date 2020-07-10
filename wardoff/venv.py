@@ -1,3 +1,4 @@
+import fnmatch
 import os
 import shutil
 import subprocess
@@ -48,6 +49,8 @@ def create():
         prompt=None,
         with_pip=True,
     )
+    # Upgrade pip everytime at run
+    pip_install("-U", "pip")
     os.chdir(cwd)
 
 
@@ -57,7 +60,6 @@ def pip(cmd_params):
     binary = VENVDIR.joinpath("bin", "python")
     base = [str(binary), "-m", "pip"]
     argv = base + cmd_params
-    print(" ".join(argv))
     return subprocess.check_output(argv).decode("utf8")
 
 
@@ -70,3 +72,26 @@ def pip_install(*package):
 
 def pip_show(package):
     return pip(["show", package]).split("\n")
+
+
+def pip_uninstall(package):
+    return pip(["uninstall", package]).split("\n")
+
+
+def pip_freeze(ignored=[]):
+    filtered = []
+    for el in pip(["freeze"]).split("\n"):
+        ignore = False
+        # pip freeze will return wardoff as an installed package of our venv
+        # and we don't care about this
+        if "wardoff" not in el:
+            # allow to ignore given package list, used to ignore analyzed
+            # package in requirements based analyzis.
+            for pkg in ignored:
+                if "==" not in pkg:
+                    pkg = "{pkg}==*".format(pkg=pkg)
+                if fnmatch.fnmatch(el, pkg):
+                    ignore = True
+            if not ignore and el:
+                filtered.append(el)
+    return filtered

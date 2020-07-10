@@ -19,6 +19,12 @@ class AnalyzerException(Exception):
     pass
 
 
+class AnalyzerSyntaxException(Exception):
+    """Exceptions related to the module analyzer."""
+
+    pass
+
+
 def find_exceptions_recursively(root, results=None, previous=None):
     """Recursively walk through an AST tree to looking for all exceptions.
 
@@ -194,13 +200,13 @@ class ModuleAnalyzer:
         self.ast = None
         self.code = None
         self.tokens = None
-        self.results = None
+        self.results = []
         self.content = None
         if custome_deprecations and isinstance(custome_deprecations, list):
             global BASE_DEPRECATIONS
             BASE_DEPRECATIONS.extends(custome_deprecations)
         try:
-            with open(module_path, "r") as fp:
+            with open(module_path, "r", errors="ignore") as fp:
                 self.content = fp.read()
         # Handle file handling errors (rights, unexisting files, etc...)
         except (OSError, IOError) as err:
@@ -208,6 +214,16 @@ class ModuleAnalyzer:
                 "Error detected during module opening ({})".format(str(err))
             )
         self.code = io.BytesIO(self.content.encode("utf-8"))
-        self.ast = ast.parse(self.content)
+        try:
+            self.ast = ast.parse(self.content)
+        except SyntaxError as err:
+            raise AnalyzerSyntaxException(str(err))
         self.tokens = [el for el in tokenize.tokenize(self.code.readline)]
         self.exceptions_found = find_exceptions_recursively(self.ast)
+
+    def analyze(self):
+        results = find_exceptions_recursively(self.ast)
+        results = retrieve_code(results, self.content)
+        for el in results:
+            tokens = tokenizer(el["def"])
+            self.results.append(syntax.extract_function_name(tokens))
