@@ -32,9 +32,38 @@ def common_cli(func):
             help="increase output verbosity",
             default=0,
         )
+        parser.add_argument(
+            "-k",
+            "--keep-env",
+            action="store_true",
+            help="don't remove the generated virtual env if option is passed.",
+        )
         return parser
 
     return wrapper
+
+
+@common_cli
+def freeze():
+    parser = argparse.ArgumentParser(
+        description="Freeze requirements of a given project",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "project",
+        nargs="?",
+        type=ProjectType(),
+        default=".",
+        help="Path, file, package, or distant "
+        "repo to analyze. "
+        "If not provided the current dir will be analyzed.",
+    )
+    parser.add_argument(
+        "--details",
+        action="store_true",
+        help="if this option is passed then will print requirements' details",
+    )
+    return parser
 
 
 @common_cli
@@ -52,12 +81,6 @@ def main():
         help="Path, file, package, or distant \
                         repo to analyze. \
                         If not provided the current dir will be analyzed.",
-    )
-    parser.add_argument(
-        "-o",
-        "--output",
-        type=argparse.FileType("w"),
-        help="Print output in a file instead of stdout",
     )
     return parser
 
