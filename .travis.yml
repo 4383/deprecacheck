@@ -17,7 +17,6 @@ script:
 - python setup.py install
 - wardoff -h
 deploy:
-  matrix:
   - provider: pypi
     user: 4383
     password:
