@@ -60,10 +60,13 @@ Found deprecated things from a named package (directly from pypi):
 ```sh
 $ wardoff niet # will list all deprecations founds in niet is requirements
 $ wardoff oslo.messaging # will list all deprecations founds in oslo.messaging is requirements
+$ wardoff oslo.messaging==12.2.2 # will list all deprecations founds in oslo.messaging 12.2.2 is requirements
+$ wardoff oslo.messaging==1.3.0 # will list all deprecations founds in oslo.messaging 1.3.0 is requirements
 ```
 
 ### From the current directory
 
+(Coming soon - not yet implemented)
 Retrieve deprecated things from the current working directory.
 Retrieve requirements from:
 - `requirements.txt`
@@ -78,6 +81,7 @@ $ wardoff # will list all deprecations founds in requirements founds in current 
 
 ### From a distant repository
 
+(Coming soon - not yet implemented)
 Retrieve deprecated things from a distgit repo.
 
 Example:
@@ -90,6 +94,7 @@ $ wardoff git@github.com:openstack/nova # by using git format
 
 ### From a local repository
 
+(Coming soon - not yet implemented)
 Retrieve deprecated things from a distgit repo.
 
 Example:
@@ -99,6 +104,8 @@ $ wardoff ~/dev/nova # from a local clone of openstack/nova
 ```
 
 ## Side features
+
+### tokenizer
 
 Wardoff provide a CLI tokenizer which can be used against code passed through
 the CLI or by passing a file path and a specific line to read.
@@ -133,6 +140,43 @@ For further options with this command:
 
 ```sh
 $ wardoff-tokenizer -h
+```
+
+### freeze
+
+Wardoff allow you to freeze installed requirements. It will provide a similar
+output than `pip freeze` but it will only print requirements related the given
+package.
+
+Example:
+
+```
+$ wardoff-freeze oslo.messaging==1.3.0
+amqp==2.6.0
+Babel==2.8.0
+certifi==2020.6.20
+chardet==3.0.4
+debtcollector==2.2.0
+dnspython==2.0.0
+eventlet==0.25.2
+greenlet==0.4.16
+idna==2.10
+iso8601==0.1.12
+kombu==4.6.11
+monotonic==1.5
+netaddr==0.8.0
+oslo.config==8.3.1
+oslo.i18n==5.0.0
+pbr==5.4.5
+pytz==2020.1
+PyYAML==5.3.1
+requests==2.24.0
+rfc3986==1.4.0
+six==1.15.0
+stevedore==3.2.0
+urllib3==1.25.10
+vine==1.3.0
+wrapt==1.12.1
 ```
 
 ## The future of wardoff
