@@ -33,9 +33,7 @@ deprecated or removed by reading documentation or by
 observing deprecation warning at the runtime in logs. When your stack
 grow and the number of requirements in your stack increase it could be
 painful to stay up-to-date, wardoff aim to collect for you all these infos
-by only using 1 command without needing any runtime environment setup.
-
-
+by using only 1 command without needing any runtime environment setup.
 
 ## Install
 
