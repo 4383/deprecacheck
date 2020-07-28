@@ -59,6 +59,10 @@ class RepoAnalyzer(BaseAnalyzer):
 
 class PackageAnalyzer(BaseAnalyzer):
     def __init__(self, project):
+        """Analyze a module installed from pypi.
+
+        :param string project: Project to analyze.
+        """
         self.project = project
         venv.create()
 
