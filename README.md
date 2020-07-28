@@ -8,7 +8,7 @@
 
 Wardoff (pronounced `ward off`) aim to help you to maintain your code base
 clean and up-to-date by reducing the pain of collect informations about all
-your underlaying libraries in your stack in a proactively.
+your underlaying libraries in your stack in a proactively manner.
 
 Wardoff looking for deprecated stuffs in project requirements and underlying
 libraries to help you to keep your code up-to-date.
