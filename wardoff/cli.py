@@ -22,6 +22,22 @@ class ProjectType:
             print(err)
 
 
+def common_cli(func):
+    def wrapper():
+        parser = func()
+        parser.add_argument(
+            "-v",
+            "--verbosity",
+            action="count",
+            help="increase output verbosity",
+            default=0,
+        )
+        return parser
+
+    return wrapper
+
+
+@common_cli
 def main():
     parser = argparse.ArgumentParser(
         description="Find deprecations in your requirements and "
@@ -46,6 +62,7 @@ def main():
     return parser
 
 
+@common_cli
 def tokenizer():
     epilog = textwrap.dedent(
         """\

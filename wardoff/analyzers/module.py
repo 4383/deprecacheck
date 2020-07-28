@@ -1,8 +1,10 @@
 from pathlib import Path
 
-from wardoff import utils, venv
+from wardoff import logging, utils, venv
 from wardoff.analyzers import syntax
 from wardoff.package import Package
+
+LOG = logging.getLogger(__name__)
 
 
 class ModuleAnalyzerInitializationError(Exception):
@@ -25,6 +27,16 @@ class BaseAnalyzer:
     def retrieve_requirements(self):
         raise NotImplementedError("retrieve method not implemented")
 
+    def get_results(self):
+        return self.results
+
+    def get_stats(self):
+        stats = {
+            "nb_analyzed_mod": len(self.requirements),
+        }
+        LOG.debug(stats)
+        return stats
+
 
 class PathAnalyzer(BaseAnalyzer):
     def retrieve_requirements(self):
@@ -46,8 +58,11 @@ class RepoAnalyzer(BaseAnalyzer):
 
 
 class PackageAnalyzer(BaseAnalyzer):
-    def analyze(self):
+    def __init__(self, project):
+        self.project = project
         venv.create()
+
+    def analyze(self):
         self.retrieve_requirements()
         self.search_deprecated()
 
@@ -56,10 +71,12 @@ class PackageAnalyzer(BaseAnalyzer):
         self.requirements = [
             Package(el) for el in venv.pip_freeze([self.project])
         ]
+        LOG.debug(self.requirements)
 
     def search_deprecated(self):
+        self.results = []
         for el in self.requirements:
-            print(el.name)
+            LOG.debug(el)
             if not el.sources_path:
                 continue
             deprecations = []
@@ -70,8 +87,9 @@ class PackageAnalyzer(BaseAnalyzer):
                     continue
                 mod_analyzer.analyze()
                 if mod_analyzer.results:
-                    deprecations.extends(mod_analyzer.results)
+                    res = {"module": pyfile, "results": mod_analyzer.results}
+                    deprecations.extends(res)
             if not deprecations:
-                print("No deprecations found")
                 continue
-            print(deprecations)
+            self.results.append({"pkg": el, "deprecations": deprecations})
+            LOG.debug(deprecations)

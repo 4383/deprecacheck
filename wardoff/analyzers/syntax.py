@@ -3,6 +3,10 @@ import io
 import tokenize
 from pathlib import Path
 
+from wardoff import logging
+
+LOG = logging.getLogger(__name__)
+
 # Order is important because we will retrieve by
 # trying to find by name in substring and so PendingDeprecationWarning
 # and DeprecationWarning could collid
@@ -225,5 +229,10 @@ class ModuleAnalyzer:
         results = find_exceptions_recursively(self.ast)
         results = retrieve_code(results, self.content)
         for el in results:
-            tokens = tokenizer(el["def"])
-            self.results.append(syntax.extract_function_name(tokens))
+            tokens_def = tokenizer(el["def"])
+            tokens_raise = tokenizer(el["raise"])
+            function_name = extract_function_name(tokens_def)
+            exception_type = extract_exception_type(tokens_raise)
+            self.results.append(
+                {"func": function_name, "except": exception_type}
+            )
