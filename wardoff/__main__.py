@@ -9,9 +9,8 @@ def common_entry_point(func):
     def wrapper():
         func()
         keep_env = False
-        for el in sys.argv:
-            if "-k" == el or "--keep-env" == el:
-                keep_env = True
+        if "-k" in sys.argv or "--keep-env" in sys.argv:
+            keep_env = True
         if not keep_env:
             venv.destroy()
 
