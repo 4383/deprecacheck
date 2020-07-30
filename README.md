@@ -247,7 +247,8 @@ https//urllib3.readthedocs.io/
 https//github.com/GrahamDumpleton/wrapt
 ```
 
-Or retrieve who are the main maintainers of stacks:
+Or retrieve who are the main maintainers of the analyzed stack
+(here in oslo.cache):
 
 ```sh
 wardoff-freeze oslo.cache --details --filter author --no-separator --no-key
