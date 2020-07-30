@@ -47,7 +47,8 @@ def freeze():
                         else:
                             print(f"{key}: {val}")
                 if not args.no_classifiers:
-                    print("\n".join(req.metadata))
+                    if not args.filter:
+                        print("\n".join(req.metadata))
 
 
 @common_entry_point

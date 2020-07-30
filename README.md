@@ -187,29 +187,61 @@ $ wardoff-freeze oslo.cache --details
 -----
 name: certifi
 version: 2020.6.20
-sources_path: /tmp/wardoff-17942/lib/python3.8/site-packages/certifi
+sources_path: /tmp/wardoff-25781/lib/python3.8/site-packages/certifi
 summary: Python package for providing Mozilla's CA Bundle.
 home-page: https//certifiio.readthedocs.io/en/latest/
 author: Kenneth Reitz
 author-email: me@kennethreitz.com
 license: MPL-2.0
-location: /tmp/wardoff-17942/lib/python3.8/site-packages
+location: /tmp/wardoff-25781/lib/python3.8/site-packages
 requires:
 required-by: requests
+Development Status :: 5 - Production/Stable
+Intended Audience :: Developers
+License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)
+Natural Language :: English
+Programming Language :: Python
+Programming Language :: Python :: 3
+Programming Language :: Python :: 3.3
+Programming Language :: Python :: 3.4
+Programming Language :: Python :: 3.5
+Programming Language :: Python :: 3.6
+Programming Language :: Python :: 3.7
+Programming Language :: Python :: 3.8
 -----
 name: chardet
 version: 3.0.4
-sources_path: /tmp/wardoff-17942/lib/python3.8/site-packages/chardet
+sources_path: /tmp/wardoff-25781/lib/python3.8/site-packages/chardet
 summary: Universal encoding detector for Python 2 and 3
 home-page: https//github.com/chardet/chardet
 author: Daniel Blanchard
 author-email: dan.blanchard@gmail.com
 license: LGPL
-location: /tmp/wardoff-17942/lib/python3.8/site-packages
+location: /tmp/wardoff-25781/lib/python3.8/site-packages
 requires:
 required-by: requests
+Development Status :: 4 - Beta
+Intended Audience :: Developers
+License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
+Operating System :: OS Independent
+Programming Language :: Python
+Programming Language :: Python :: 2
+Programming Language :: Python :: 2.6
+Programming Language :: Python :: 2.7
+Programming Language :: Python :: 3
+Programming Language :: Python :: 3.3
+Programming Language :: Python :: 3.4
+Programming Language :: Python :: 3.5
+Programming Language :: Python :: 3.6
+Topic :: Software Development :: Libraries :: Python Modules
+Topic :: Text Processing :: Linguistic
+-----
 ...
 ```
+
+Previously packages infos and classifiers have been displayed, in this way
+by example it could allow you to find which package doesn't support specific
+python version.
 
 Moreover you can use `wardoff-freeze` to grab more informations than that,
 by example you can retrieve all the projects home pages of your stack:
