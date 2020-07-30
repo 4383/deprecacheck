@@ -10,11 +10,10 @@ Wardoff (pronounced `ward off`) aim to help you to maintain your code base
 clean and up-to-date by reducing the pain of collect informations about all
 your underlaying libraries in your stack in a proactively manner.
 
-Wardoff looking for deprecated stuffs in project requirements and underlying
-libraries to help you to keep your code up-to-date.
-
-The main goal of wardoff is to analyze all requirements of a given project
-to extract deprecated things from their codes.
+Wardoff grab for you many informations about your stacks, it can be used to:
+- looking for deprecated stuffs in project requirements and underlying
+- grab requirements infos (detailed or not) (cf. following examples)
+- convert source code into python token
 
 For each analyze a dedicated python virtual environment is built and project's
 requirements are installed within. Then installed source code files of
@@ -51,7 +50,12 @@ $ python3 -m pip install --user wardoff
 
 ## Usages
 
-### From a named package
+### Looking for deprecated things in stacks
+
+The main goal here is to analyze all requirements of a given project
+to extract deprecated things from their codes.
+
+#### From a named package
 
 Found deprecated things from a named package (directly from pypi):
 
@@ -62,7 +66,7 @@ $ wardoff oslo.messaging==12.2.2 # will list all deprecations founds in oslo.mes
 $ wardoff oslo.messaging==1.3.0 # will list all deprecations founds in oslo.messaging 1.3.0 is requirements
 ```
 
-### From the current directory
+#### From the current directory
 
 (Coming soon - not yet implemented)
 Retrieve deprecated things from the current working directory.
@@ -77,7 +81,7 @@ Example:
 $ wardoff # will list all deprecations founds in requirements founds in current directory
 ```
 
-### From a distant repository
+#### From a distant repository
 
 (Coming soon - not yet implemented)
 Retrieve deprecated things from a distgit repo.
@@ -90,7 +94,7 @@ $ wardoff https://github.com/openstack/nova # from github.com
 $ wardoff git@github.com:openstack/nova # by using git format
 ```
 
-### From a local repository
+#### From a local repository
 
 (Coming soon - not yet implemented)
 Retrieve deprecated things from a distgit repo.
@@ -100,8 +104,6 @@ Example:
 ```sh
 $ wardoff ~/dev/nova # from a local clone of openstack/nova
 ```
-
-## Side features
 
 ### tokenizer
 
@@ -176,6 +178,110 @@ urllib3==1.25.10
 vine==1.3.0
 wrapt==1.12.1
 ```
+
+Also you can retrieve all the packages informations by passing the `--details`
+option:
+
+```sh
+$ wardoff-freeze oslo.cache --details
+-----
+name: certifi
+version: 2020.6.20
+sources_path: /tmp/wardoff-17942/lib/python3.8/site-packages/certifi
+summary: Python package for providing Mozilla's CA Bundle.
+home-page: https//certifiio.readthedocs.io/en/latest/
+author: Kenneth Reitz
+author-email: me@kennethreitz.com
+license: MPL-2.0
+location: /tmp/wardoff-17942/lib/python3.8/site-packages
+requires:
+required-by: requests
+-----
+name: chardet
+version: 3.0.4
+sources_path: /tmp/wardoff-17942/lib/python3.8/site-packages/chardet
+summary: Universal encoding detector for Python 2 and 3
+home-page: https//github.com/chardet/chardet
+author: Daniel Blanchard
+author-email: dan.blanchard@gmail.com
+license: LGPL
+location: /tmp/wardoff-17942/lib/python3.8/site-packages
+requires:
+required-by: requests
+...
+```
+
+Moreover you can use `wardoff-freeze` to grab more informations than that,
+by example you can retrieve all the projects home pages of your stack:
+
+```sh
+$ wardoff-freeze oslo.cache --details --keep-env --filter home-page --no-separator --no-key
+https//certifiio.readthedocs.io/en/latest/
+https//github.com/chardet/chardet
+https//docs.openstack.org/debtcollector/latest
+https//github.com/micheles/decorator
+https//github.com/sqlalchemy/dogpile.cache
+https//github.com/kjd/idna
+https//bitbucket.org/micktwomey/pyiso8601
+https//msgpack.org/
+https//github.com/drkjam/netaddr/
+https//github.com/al45tair/netifaces
+https//docs.openstack.org/oslo.config/latest/
+https//docs.openstack.org/oslo.context/latest/
+https//docs.openstack.org/oslo.i18n/latest
+https//docs.openstack.org/oslo.log/latest
+https//docs.openstack.org/oslo.serialization/latest/
+https//docs.openstack.org/oslo.utils/latest/
+https//github.com/pypa/packaging
+https//docs.openstack.org/pbr/latest/
+http//github.com/seb-m/pyinotify
+https//github.com/pyparsing/pyparsing/
+https//dateutil.readthedocs.io
+http//pythonhosted.org/pytz
+https//github.com/yaml/pyyaml
+https//requests.readthedocs.io
+http//rfc3986.readthedocs.io
+https//github.com/benjaminp/six
+https//docs.openstack.org/stevedore/latest/
+https//urllib3.readthedocs.io/
+https//github.com/GrahamDumpleton/wrapt
+```
+
+Or retrieve who are the main maintainers of stacks:
+
+```sh
+wardoff-freeze oslo.cache --details --filter author --no-separator --no-key
+Kenneth Reitz
+Daniel Blanchard
+OpenStack
+Michele Simionato
+Mike Bayer
+Kim Davies
+Michael Twomey
+Inada Naoki
+David P. D. Moss, Stefan Nordhausen et al
+Alastair Houghton
+OpenStack
+OpenStack
+OpenStack
+OpenStack
+OpenStack
+OpenStack
+Donald Stufft and individual contributors
+OpenStack
+Sebastien Martini
+Paul McGuire
+Gustavo Niemeyer
+Stuart Bishop
+Kirill Simonov
+Kenneth Reitz
+Ian Stapleton Cordasco
+Benjamin Peterson
+OpenStack
+Andrey Petrov
+Graham Dumpleton
+```
+
 
 ## The future of wardoff
 
