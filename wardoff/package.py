@@ -17,6 +17,7 @@ class Package:
 
         :param str pkg: Package name to handle
         """
+        self.metadata = []
         try:
             self.name, self.version = pkg.split("==")
         except ValueError:
@@ -58,6 +59,24 @@ class Package:
                     )
                     if plevel.is_dir() or plevel.is_file():
                         self.sources_path = plevel
+
+            metadata = Path(self.location).joinpath(
+                "{name}-{version}.dist-info".format(
+                    name=self.name, version=self.version
+                ),
+                "METADATA",
+            )
+            if metadata.is_file():
+                with open(str(metadata)) as fp:
+                    for line in fp.readlines():
+                        if not line.startswith("Classifier:"):
+                            continue
+                        classifier = (
+                            line.replace("Classifier:", "")
+                            .replace("\n", "")
+                            .strip()
+                        )
+                        self.metadata.append(classifier)
 
     def module_is_single_file(self):
         return Path(self.location).joinpath(self.name).is_file()

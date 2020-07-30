@@ -32,6 +32,8 @@ def freeze():
                 if not args.no_separator:
                     print("-----")
                 for key in req.__dict__:
+                    if key == "metadata":
+                        continue
                     if args.filter and key not in args.filter:
                         continue
                     val = str(req.__dict__[key])
@@ -44,6 +46,8 @@ def freeze():
                             print(val)
                         else:
                             print(f"{key}: {val}")
+                if not args.no_classifiers:
+                    print("\n".join(req.metadata))
 
 
 @common_entry_point

@@ -64,6 +64,11 @@ def freeze():
         help="if this option is passed then will print requirements' details",
     )
     parser.add_argument(
+        "--no-classifiers",
+        action="store_true",
+        help="if this option is passed then classifiers will be ignored.",
+    )
+    parser.add_argument(
         "--filter", nargs="?", help="filtered details' fields",
     )
     parser.add_argument(
