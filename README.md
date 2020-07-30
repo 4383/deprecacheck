@@ -182,13 +182,13 @@ wrapt==1.12.1
 ### infos
 
 Wardoff allow you to retrieve infos of all your requirements. It will provide
-a similar output than `pip freeze` but it will only print requirements
-related the given package.
+a similar output than `pip show` but it will only print requirements
+related the given package and also their pypi classifiers.
 
 Examples
 
 ```sh
-$ wardoff-freeze oslo.cache --details
+$ wardoff-infos oslo.cache --details
 -----
 name: certifi
 version: 2020.6.20
@@ -248,11 +248,11 @@ Previously packages infos and classifiers have been displayed, in this way
 by example it could allow you to find which package doesn't support specific
 python version.
 
-Moreover you can use `wardoff-freeze` to grab more informations than that,
+Moreover you can use `wardoff-infos` to grab more informations than that,
 by example you can retrieve all the projects home pages of your stack:
 
 ```sh
-$ wardoff-freeze oslo.cache --details --keep-env --filter home-page --no-separator --no-key
+$ wardoff-infos oslo.cache --details --keep-env --filter home-page --no-separator --no-key
 https//certifiio.readthedocs.io/en/latest/
 https//github.com/chardet/chardet
 https//docs.openstack.org/debtcollector/latest
@@ -288,7 +288,7 @@ Or retrieve who are the main maintainers of the analyzed stack
 (here in oslo.cache):
 
 ```sh
-wardoff-freeze oslo.cache --details --filter author --no-separator --no-key | sort | uniq
+wardoff-infos oslo.cache --details --filter author --no-separator --no-key | sort | uniq
 Alastair Houghton
 Andrey Petrov
 Benjamin Peterson
