@@ -251,38 +251,28 @@ Or retrieve who are the main maintainers of the analyzed stack
 (here in oslo.cache):
 
 ```sh
-wardoff-freeze oslo.cache --details --filter author --no-separator --no-key
-Kenneth Reitz
+wardoff-freeze oslo.cache --details --filter author --no-separator --no-key | sort | uniq
+Alastair Houghton
+Andrey Petrov
+Benjamin Peterson
 Daniel Blanchard
-OpenStack
+David P. D. Moss, Stefan Nordhausen et al
+Donald Stufft and individual contributors
+Graham Dumpleton
+Gustavo Niemeyer
+Ian Stapleton Cordasco
+Inada Naoki
+Kenneth Reitz
+Kim Davies
+Kirill Simonov
+Michael Twomey
 Michele Simionato
 Mike Bayer
-Kim Davies
-Michael Twomey
-Inada Naoki
-David P. D. Moss, Stefan Nordhausen et al
-Alastair Houghton
 OpenStack
-OpenStack
-OpenStack
-OpenStack
-OpenStack
-OpenStack
-Donald Stufft and individual contributors
-OpenStack
-Sebastien Martini
 Paul McGuire
-Gustavo Niemeyer
+Sebastien Martini
 Stuart Bishop
-Kirill Simonov
-Kenneth Reitz
-Ian Stapleton Cordasco
-Benjamin Peterson
-OpenStack
-Andrey Petrov
-Graham Dumpleton
 ```
-
 
 ## The future of wardoff
 
