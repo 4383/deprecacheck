@@ -4,6 +4,22 @@ from pathlib import Path
 
 from wardoff.analyzers import module as module_analyzer
 
+VALID_VERSIONS = [
+    "2",
+    "2.6",
+    "2.7",
+    "3",
+    "3.1",
+    "3.2",
+    "3.3",
+    "3.4",
+    "3.5",
+    "3.6",
+    "3.7",
+    "3.8",
+    "3.9",
+]
+
 
 class ProjectType:
     def __call__(self, string):
@@ -20,6 +36,20 @@ class ProjectType:
             return module_analyzer.PackageAnalyzer(string)
         except module_analyzer.ModuleAnalyzerInitializationError as err:
             print(err)
+
+
+class VersionType:
+    def __call__(self, string):
+        versions = string.split(",")
+        if not isinstance(versions, list):
+            versions = [versions]
+        if not set(versions).issubset(set(VALID_VERSIONS)):
+            print(
+                "Version not recognized (choose from {ver})".format(
+                    ver=",".join([f"'{el}'" for el in VALID_VERSIONS])
+                )
+            )
+        return versions
 
 
 def common_cli(func):
@@ -44,6 +74,49 @@ def common_cli(func):
 
 
 @common_cli
+def infos():
+    parser = argparse.ArgumentParser(
+        description="Show infos about all the project's requirements",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "project",
+        nargs="?",
+        type=ProjectType(),
+        default=".",
+        help="Path, file, package, or distant "
+        "repo to analyze. "
+        "If not provided the current dir will be analyzed.",
+    )
+    parser.add_argument(
+        "--no-classifiers",
+        action="store_true",
+        help="pypi classifiers will not been displayed.",
+    )
+    parser.add_argument(
+        "--filter", nargs="?", help="filtered details' fields",
+    )
+    parser.add_argument(
+        "--no-separator",
+        action="store_true",
+        help="display a separator between detailed results",
+    )
+    parser.add_argument(
+        "--no-key", action="store_true", help="display the details' keys",
+    )
+    parser.add_argument(
+        "--support",
+        nargs="?",
+        type=VersionType(),
+        help="only display requirements who support the given python "
+        "versions (allowed values: {ver})".format(
+            ver=",".join([f"'{el}'" for el in VALID_VERSIONS])
+        ),
+    )
+    return parser
+
+
+@common_cli
 def freeze():
     parser = argparse.ArgumentParser(
         description="Freeze requirements of a given project",
@@ -57,27 +130,6 @@ def freeze():
         help="Path, file, package, or distant "
         "repo to analyze. "
         "If not provided the current dir will be analyzed.",
-    )
-    parser.add_argument(
-        "--details",
-        action="store_true",
-        help="if this option is passed then will print requirements' details",
-    )
-    parser.add_argument(
-        "--no-classifiers",
-        action="store_true",
-        help="if this option is passed then classifiers will be ignored.",
-    )
-    parser.add_argument(
-        "--filter", nargs="?", help="filtered details' fields",
-    )
-    parser.add_argument(
-        "--no-separator",
-        action="store_true",
-        help="display a separator between detailed results",
-    )
-    parser.add_argument(
-        "--no-key", action="store_true", help="display the details' keys",
     )
     return parser
 

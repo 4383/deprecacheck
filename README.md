@@ -179,8 +179,13 @@ vine==1.3.0
 wrapt==1.12.1
 ```
 
-Also you can retrieve all the packages informations by passing the `--details`
-option:
+### infos
+
+Wardoff allow you to retrieve infos of all your requirements. It will provide
+a similar output than `pip freeze` but it will only print requirements
+related the given package.
+
+Examples
 
 ```sh
 $ wardoff-freeze oslo.cache --details
@@ -305,6 +310,52 @@ Paul McGuire
 Sebastien Martini
 Stuart Bishop
 ```
+
+Another useful option is the `--support` option that allow you to retrieve
+project that only support specific versions of python. You can mix supported
+version by example to retrieve the project's requirements that support the
+given versions, example:
+
+```sh
+$ wardoff-infos oslo.cache --no-separator --support 2.7,3.4 --filter name --no-key
+chardet
+decorator
+idna
+netifaces
+packaging
+pyinotify
+pyparsing
+pytz
+rfc3986
+wrapt
+```
+
+The previous example looking for requirements who still support python 2.7 and
+3.4 in the same time, displayed results match this condition.
+
+Here is another example:
+
+```sh
+$ wardoff-infos oslo.cache --no-separator --support 3.7,3.8 --filter name --no-key
+certifi
+idna
+msgpack
+netaddr
+oslo.config
+oslo.context
+oslo.i18n
+oslo.log
+oslo.serialization
+packaging
+pyparsing
+PyYAML
+requests
+urllib3
+wrapt
+```
+
+This kind of filter can be used to focus some of your developments or works
+on specific versions of python.
 
 ## The future of wardoff
 

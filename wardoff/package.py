@@ -78,6 +78,16 @@ class Package:
                         )
                         self.metadata.append(classifier)
 
+    def supported_python_versions(self):
+        versions = []
+        for metadata in self.metadata:
+            if metadata.startswith("Programming Language :: Python ::"):
+                version = metadata.split("::")[2].strip()
+                if version == "Implementation":
+                    continue
+                versions.append(version)
+        return versions
+
     def module_is_single_file(self):
         return Path(self.location).joinpath(self.name).is_file()
 

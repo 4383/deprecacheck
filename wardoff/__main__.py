@@ -25,30 +25,47 @@ def freeze():
     if not module_analyzer.requirements:
         print(f"No requirements used by {module_analyzer.project}")
     else:
-        if not args.details:
-            print("\n".join([str(el) for el in module_analyzer.requirements]))
-        else:
-            for req in module_analyzer.requirements:
-                if not args.no_separator:
-                    print("-----")
-                for key in req.__dict__:
-                    if key == "metadata":
-                        continue
-                    if args.filter and key not in args.filter:
-                        continue
-                    val = str(req.__dict__[key])
-                    if "$$secure_url$$" in val:
-                        val = val.replace("$$secure_url$$", "https")
-                    if "$$url$$" in val:
-                        val = val.replace("$$url$$", "http")
-                    if key:
-                        if args.no_key:
-                            print(val)
-                        else:
-                            print(f"{key}: {val}")
-                if not args.no_classifiers:
-                    if not args.filter:
-                        print("\n".join(req.metadata))
+        print("\n".join([str(el) for el in module_analyzer.requirements]))
+
+
+@common_entry_point
+def infos():
+    args = cli.infos().parse_args()
+    module_analyzer = args.project
+    module_analyzer.retrieve_requirements()
+    if not module_analyzer.requirements:
+        print(f"No requirements used by {module_analyzer.project}")
+    else:
+        output = []
+        for req in module_analyzer.requirements:
+            # are we looking for specific python supported versions?
+            if args.support:
+                sup_ver = set(req.supported_python_versions())
+                # are we support all searched versions?
+                if not set(args.support).issubset(sup_ver):
+                    # not, then ignore this project
+                    continue
+            if not args.no_separator:
+                output.append("-----")
+            for key in req.__dict__:
+                if key == "metadata":
+                    continue
+                if args.filter and key not in args.filter:
+                    continue
+                val = str(req.__dict__[key])
+                if "$$secure_url$$" in val:
+                    val = val.replace("$$secure_url$$", "https")
+                if "$$url$$" in val:
+                    val = val.replace("$$url$$", "http")
+                if key:
+                    if args.no_key:
+                        output.append(val)
+                    else:
+                        output.append(f"{key}: {val}")
+            if not args.no_classifiers:
+                if not args.filter:
+                    output.extend(req.metadata)
+        print("\n".join(output))
 
 
 @common_entry_point
