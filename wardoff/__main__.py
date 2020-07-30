@@ -29,15 +29,21 @@ def freeze():
             print("\n".join([str(el) for el in module_analyzer.requirements]))
         else:
             for req in module_analyzer.requirements:
-                print("")
+                if not args.no_separator:
+                    print("-----")
                 for key in req.__dict__:
+                    if args.filter and key not in args.filter:
+                        continue
                     val = str(req.__dict__[key])
                     if "$$secure_url$$" in val:
                         val = val.replace("$$secure_url$$", "https")
                     if "$$url$$" in val:
                         val = val.replace("$$url$$", "http")
                     if key:
-                        print(f"{key}: {val}")
+                        if args.no_key:
+                            print(val)
+                        else:
+                            print(f"{key}: {val}")
 
 
 @common_entry_point

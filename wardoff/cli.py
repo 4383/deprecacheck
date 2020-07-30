@@ -63,6 +63,17 @@ def freeze():
         action="store_true",
         help="if this option is passed then will print requirements' details",
     )
+    parser.add_argument(
+        "--filter", nargs="?", help="filtered details' fields",
+    )
+    parser.add_argument(
+        "--no-separator",
+        action="store_true",
+        help="display a separator between detailed results",
+    )
+    parser.add_argument(
+        "--no-key", action="store_true", help="display the details' keys",
+    )
     return parser
 
 
