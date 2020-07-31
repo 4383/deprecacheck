@@ -251,7 +251,7 @@ Or retrieve who are the main maintainers of the analyzed stack
 (here in oslo.cache):
 
 ```sh
-wardoff-infos oslo.cache --details --filter author --no-separator --no-key | sort | uniq
+$ wardoff-infos oslo.cache --details --filter author --no-separator --no-key | sort | uniq
 Alastair Houghton
 Andrey Petrov
 Benjamin Peterson
