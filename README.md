@@ -12,7 +12,7 @@ your underlaying libraries in your stack in a proactively manner.
 
 Wardoff grab for you many informations about your stacks, it can be used to:
 - looking for deprecated stuffs in project requirements and underlying
-- grab requirements infos (detailed or not) (cf. following examples)
+- grab requirements' infos (detailed or not) (cf. see the examples in the `infos` section)
 - convert source code into python token
 
 For each analyze a dedicated python virtual environment is built and project's
