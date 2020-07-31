@@ -142,43 +142,6 @@ For further options with this command:
 $ wardoff-tokenizer -h
 ```
 
-### freeze
-
-Wardoff allow you to freeze installed requirements. It will provide a similar
-output than `pip freeze` but it will only print requirements related the given
-package.
-
-Example:
-
-```
-$ wardoff-freeze oslo.messaging==1.3.0
-amqp==2.6.0
-Babel==2.8.0
-certifi==2020.6.20
-chardet==3.0.4
-debtcollector==2.2.0
-dnspython==2.0.0
-eventlet==0.25.2
-greenlet==0.4.16
-idna==2.10
-iso8601==0.1.12
-kombu==4.6.11
-monotonic==1.5
-netaddr==0.8.0
-oslo.config==8.3.1
-oslo.i18n==5.0.0
-pbr==5.4.5
-pytz==2020.1
-PyYAML==5.3.1
-requests==2.24.0
-rfc3986==1.4.0
-six==1.15.0
-stevedore==3.2.0
-urllib3==1.25.10
-vine==1.3.0
-wrapt==1.12.1
-```
-
 ### infos
 
 Wardoff allow you to retrieve infos of all your requirements. It will provide
@@ -356,6 +319,43 @@ wrapt
 
 This kind of filter can be used to focus some of your developments or works
 on specific versions of python.
+
+### freeze
+
+Wardoff allow you to freeze installed requirements. It will provide a similar
+output than `pip freeze` but it will only print requirements related the given
+package.
+
+Example:
+
+```
+$ wardoff-freeze oslo.messaging==1.3.0
+amqp==2.6.0
+Babel==2.8.0
+certifi==2020.6.20
+chardet==3.0.4
+debtcollector==2.2.0
+dnspython==2.0.0
+eventlet==0.25.2
+greenlet==0.4.16
+idna==2.10
+iso8601==0.1.12
+kombu==4.6.11
+monotonic==1.5
+netaddr==0.8.0
+oslo.config==8.3.1
+oslo.i18n==5.0.0
+pbr==5.4.5
+pytz==2020.1
+PyYAML==5.3.1
+requests==2.24.0
+rfc3986==1.4.0
+six==1.15.0
+stevedore==3.2.0
+urllib3==1.25.10
+vine==1.3.0
+wrapt==1.12.1
+```
 
 ## The future of wardoff
 
