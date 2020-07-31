@@ -2,6 +2,7 @@ import fnmatch
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 import venv as virtualenv
 from pathlib import Path
@@ -12,13 +13,24 @@ TMPDIR = Path(tempfile.gettempdir())
 VENVDIR = TMPDIR.joinpath(utils.identifier())
 
 
+def get_venv_dir():
+    if "--env" not in sys.argv:
+        return VENVDIR
+    index = sys.argv.index("--env")
+    return TMPDIR.joinpath(utils.identifier(sys.argv[index + 1]))
+
+
+def list_existing_env():
+    return list(TMPDIR.glob("**/wardoff-*"))
+
+
 class VenvException(Exception):
     pass
 
 
 def site_packages():
-    python_version = [el for el in VENVDIR.rglob("lib/python*")][0]
-    site_packages_path = VENVDIR.joinpath(
+    python_version = [el for el in get_venv_dir().rglob("lib/python*")][0]
+    site_packages_path = get_venv_dir().joinpath(
         "lib", python_version, "site-packages"
     )
     return site_packages_path
@@ -29,8 +41,8 @@ def is_installed(package):
 
 
 def destroy():
-    if VENVDIR.is_dir():
-        shutil.rmtree(str(VENVDIR))
+    if get_venv_dir().is_dir():
+        shutil.rmtree(str(get_venv_dir()))
 
 
 def create():
@@ -39,8 +51,9 @@ def create():
     # but on travis created virtualenv is weird so we prefer to
     # create the path manually on then move in to create the venv.
     cwd = os.getcwd()
-    os.mkdir(str(VENVDIR))
-    os.chdir(str(VENVDIR))
+    env = str(get_venv_dir())
+    os.mkdir(env)
+    os.chdir(env)
     virtualenv.create(
         ".",
         clear=False,
@@ -57,7 +70,7 @@ def create():
 def pip(cmd_params):
     if not isinstance(cmd_params, list):
         raise ValueError("list is excepted")
-    binary = VENVDIR.joinpath("bin", "python")
+    binary = get_venv_dir().joinpath("bin", "python")
     base = [str(binary), "-m", "pip"]
     argv = base + cmd_params
     return subprocess.check_output(argv).decode("utf8")
@@ -66,7 +79,6 @@ def pip(cmd_params):
 def pip_install(*package):
     cmd_params = list(package)
     cmd_params.insert(0, "install")
-    cmd_params.insert(1, "-I")
     return pip(cmd_params)
 
 

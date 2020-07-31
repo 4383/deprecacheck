@@ -1,13 +1,24 @@
+import shutil
 import sys
 
-from wardoff import cli
+from wardoff import cli, logging
 from wardoff import tokenizer as tok
 from wardoff import venv
+
+LOG = logging.getLogger(__name__)
 
 
 def common_entry_point(func):
     def wrapper():
+        # here we are before the wrapped function's execution
+        venv_dir = venv.get_venv_dir()
+        if venv_dir.is_dir():
+            LOG.info(f"Reusing an existing environment {venv_dir}")
+        else:
+            LOG.info(f"Creating a new environment {venv_dir}")
+            venv.create()
         func()
+        # here we finished its execution
         keep_env = False
         if "-k" in sys.argv or "--keep-env" in sys.argv:
             keep_env = True
@@ -21,6 +32,8 @@ def common_entry_point(func):
 def freeze():
     args = cli.freeze().parse_args()
     module_analyzer = args.project
+    module_analyzer.set_ignore_extra_req(args.ignore_extra_req)
+    module_analyzer.set_dont_reinstall(args.dont_reinstall)
     module_analyzer.retrieve_requirements()
     if not module_analyzer.requirements:
         print(f"No requirements used by {module_analyzer.project}")
@@ -32,6 +45,8 @@ def freeze():
 def infos():
     args = cli.infos().parse_args()
     module_analyzer = args.project
+    module_analyzer.set_ignore_extra_req(args.ignore_extra_req)
+    module_analyzer.set_dont_reinstall(args.dont_reinstall)
     module_analyzer.retrieve_requirements()
     if not module_analyzer.requirements:
         print(f"No requirements used by {module_analyzer.project}")
@@ -68,10 +83,32 @@ def infos():
         print("\n".join(output))
 
 
+def list_env():
+    _ = cli.list_env().parse_args()
+    venvs = venv.list_existing_env()
+    if not venvs:
+        LOG.info("No wardoff environments found...")
+        return
+    print("\n".join([str(el) for el in venvs]))
+
+
+def rm_env():
+    _ = cli.rm_env().parse_args()
+    venvs = venv.list_existing_env()
+    if not venvs:
+        LOG.info("No environements found... nothing to remove")
+    for el in venvs:
+        LOG.info(f"removing {el}")
+        shutil.rmtree(str(el))
+    LOG.info("done")
+
+
 @common_entry_point
 def main():
     args = cli.main().parse_args()
     module_analyzer = args.project
+    module_analyzer.set_ignore_extra_req(args.ignore_extra_req)
+    module_analyzer.set_dont_reinstall(args.dont_reinstall)
     module_analyzer.analyze()
     res = module_analyzer.get_results()
     if not res:

@@ -68,7 +68,6 @@ $ wardoff oslo.messaging==1.3.0 # will list all deprecations founds in oslo.mess
 
 #### From the current directory
 
-(Coming soon - not yet implemented)
 Retrieve deprecated things from the current working directory.
 Retrieve requirements from:
 - `requirements.txt`
@@ -79,6 +78,20 @@ Example:
 
 ```sh
 $ wardoff # will list all deprecations founds in requirements founds in current directory
+```
+
+#### From a local repository
+
+Retrieve deprecated things from a distgit repo.
+Retrieve requirements from:
+- `requirements.txt`
+- `test-requirements.txt`
+- `*-requirements.txt`
+
+Example:
+
+```sh
+$ wardoff ~/dev/nova # from a local clone of openstack/nova
 ```
 
 #### From a distant repository
@@ -94,16 +107,6 @@ $ wardoff https://github.com/openstack/nova # from github.com
 $ wardoff git@github.com:openstack/nova # by using git format
 ```
 
-#### From a local repository
-
-(Coming soon - not yet implemented)
-Retrieve deprecated things from a distgit repo.
-
-Example:
-
-```sh
-$ wardoff ~/dev/nova # from a local clone of openstack/nova
-```
 
 ### tokenizer
 
@@ -359,6 +362,66 @@ urllib3==1.25.10
 vine==1.3.0
 wrapt==1.12.1
 ```
+
+## Wardoff's environment
+
+To works wardoff generate environment on your laptop, you can name
+and reuse them. All the generated environment can be conserved by passing
+`--keep-env`or destroyed
+(by default the current generated environment is destroyed at each execution).
+
+You can list your environments by using `wardoff-list-env` or simply remove
+all of them by using `--wardoff-rm-env`.
+
+If you pass a name at your command and if this environment already exist then
+it will be reused, example:
+
+```sh
+$ wardoff-freeze ~/dev/redhat/upstream/openstack/oslo/oslo.cache --ignore-extra-req --keep-env --env oslo-cache -vvv
+INFO: Reusing an existing environment /tmp/wardoff-oslo-cache
+certifi==2020.6.20
+chardet==3.0.4
+debtcollector==2.2.0
+decorator==4.4.2
+dogpile.cache==1.0.1
+idna==2.10
+iso8601==0.1.12
+msgpack==1.0.0
+netaddr==0.8.0
+netifaces==0.10.9
+oslo.config==8.3.1
+oslo.context==3.1.0
+oslo.i18n==5.0.0
+oslo.log==4.3.0
+oslo.serialization==4.0.0
+oslo.utils==4.4.0
+packaging==20.4
+pbr==5.4.5
+pyinotify==0.9.6
+pyparsing==2.4.7
+python-dateutil==2.8.1
+pytz==2020.1
+PyYAML==5.3.1
+requests==2.24.0
+rfc3986==1.4.0
+six==1.15.0
+stevedore==3.2.0
+urllib3==1.25.10
+wrapt==1.12.1
+```
+
+In the previous command we reused an existing environment called `oslo-cache`
+and we ask to keep this one at the end of our command to reusing it again. If
+this environment doesn't exist it will created automatically.
+
+## Output's Verbosity
+
+You can increase the output verbosity on all your commands by passing the `-v`
+option. The `v` you pass the more the verbosity will be increased. By example
+`-vvv` will display logs error, warn, info, and debug.
+
+This option could be useful to debug some situations and observe what's
+happening.
 
 ## The future of wardoff
 

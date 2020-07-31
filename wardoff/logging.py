@@ -21,12 +21,10 @@ def get_verbosity():
 def getLogger(name):
     verbosity = get_verbosity()
     log_level = logging.ERROR
-    if verbosity >= 3:
+    if verbosity >= 2:
         log_level = logging.DEBUG
-    elif verbosity >= 2:
-        log_level = logging.INFO
     elif verbosity >= 1:
-        log_level = logging.WARNING
+        log_level = logging.INFO
     logging.basicConfig(
         format="%(levelname)7s: %(message)s",
         stream=sys.stdout,
