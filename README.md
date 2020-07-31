@@ -69,10 +69,12 @@ $ wardoff oslo.messaging==1.3.0 # will list all deprecations founds in oslo.mess
 #### From the current directory
 
 Retrieve deprecated things from the current working directory.
+
 Retrieve requirements from:
 - `requirements.txt`
 - `test-requirements.txt`
 - `*-requirements.txt`
+- `**/*requirements.txt`
 
 Example:
 
@@ -83,10 +85,12 @@ $ wardoff # will list all deprecations founds in requirements founds in current 
 #### From a local repository
 
 Retrieve deprecated things from a distgit repo.
+
 Retrieve requirements from:
 - `requirements.txt`
 - `test-requirements.txt`
 - `*-requirements.txt`
+- `**/*requirements.txt`
 
 Example:
 
