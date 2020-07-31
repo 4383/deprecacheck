@@ -96,7 +96,8 @@ $ wardoff ~/dev/nova # from a local clone of openstack/nova
 
 #### From a distant repository
 
-(Coming soon - not yet implemented)
+*(Coming soon - not yet implemented)*
+
 Retrieve deprecated things from a distgit repo.
 
 Example:
